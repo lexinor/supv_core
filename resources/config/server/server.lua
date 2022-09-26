@@ -4,6 +4,9 @@ Config.Blacklisted = {
     entity = { -- you can put every entity model here (npc, vehicle, obj ...)
         [`rhino`] = true,
         [`hydra`] = true,
+        [`cerberus2`] = true,
+        [`cerberus3`] = true,
+        [`phantom2`] = true,
     }
 }
 --[[__Register Webhook__]]--
@@ -15,7 +18,7 @@ Config.Webhook = {
     },
     
     default = {
-        bot_name = 'sublime_core',
+        bot_name = 'NewDawn',
         color = 7055103,
         localisation = 'fr_FR',
         dof = 'letter', -- 'letter' or 'numeric'
