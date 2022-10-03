@@ -43,7 +43,7 @@ Config.PlayerOptions = {
     },
     canDoDriveBy = nil, -- nil per default (true can shoot in vehicle / false can't)
     noRollingGunFight = false, -- turn on true to clear task when player try press escape with weapon to roll on the ground
-    noPunchRunning = true, -- turn on true to clear task when player melee attack during run
+    noPunchRunning = false, -- turn on true to clear task when player melee attack during run
     unlimitedStamina = false, -- turn on true for sprint everytime
     CrossHit = false, -- false if you want turn off cross hit with weapon  
     afkCam = false, -- true per default, false desactivate afkCam
@@ -66,14 +66,14 @@ Config.PauseMenu = {
     enable = true,
     title = '~o~New Dawn RP',
     map = 'Carte',
-    game = 'Vous nous quittez ?',
+    game = 'Jeu',
     disconnect = "Au revoir :'(",
     quit = 'Quitter',
-    information = 'Breafing',
+    information = 'Briefing',
     stats = 'Statistiques',
     setting = 'Paramètres',
     fivemKey = 'Touches FiveM' ,
-    gallery = 'Gallerie',
+    gallery = 'Galerie',
     editor = 'Editeur',
 }
 --[[__Config module default value__]]--
