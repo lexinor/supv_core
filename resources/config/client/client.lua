@@ -3,7 +3,7 @@
 Config.Rewards = {vehicle = false, npc = false, clearPickUpsRewards = true, listVehicle = {}} -- false to desactivate rewards & true to active them / clearPickUpsRewards set true if npc = false [`polmav`] = true, [`fbi`] = true, [`fib2`] = true, [`police`] = true, [`police2`] = true, [`police3`] = true, [`police4`] = true, [`policeb`] = true, [`policet`] = true, [`policeold1`] = true, [`policeold2`] = true, [`pranger`] = true, [`riot`] = true, [`sheriff`] = true, [`sheriff2`] = true}
 --[[__Manage traffic of your server & dispatch__]]--
 Config.Traffic = {
-    amount = {traffic = 3, npc = 2, parked = 1}, -- 0 = none / 3 is normal (max is maximum) (type: integrer, so don't write 2.5...)
+    amount = {traffic = 3, npc = 3, parked = 3}, -- 0 = none / 3 is normal (max is maximum) (type: integrer, so don't write 2.5...)
     enable = {polices = false, garbageTruck = true, boats = true, trains = true}, -- true turn on traffic (default) from key, false turn turn off traffic from key
     dispatch = { -- https://docs.fivem.net/natives/?_0xDC0F817884CDD856 -- enable = true (default) active dispatch / false to desactivate dispatch
         polices = {enable = false, list = {1,2,4,6,7,8,9,10,12,13}}, -- enable = true (default) active dispatch / false to desactivate dispatch
@@ -24,7 +24,7 @@ Config.AudioFlag = { -- https://docs.fivem.net/natives/?_0xB9EFD5C25018725A
 Config.Relationship = { -- https://docs.fivem.net/natives/?_0xBF25EB89375A37AD
     enable = true, -- turn on true to activate script
     list = {
-        {relation = 1, group1 = {`CIVMALE`, `CIVFEMALE`, `GANG_1`, `GANG_2`, `GANG_9`, `GANG_10`, `AMBIENT_GANG_LOST`, `AMBIENT_GANG_MEXICAN`, `AMBIENT_GANG_FAMILY`, `AMBIENT_GANG_BALLAS`, `AMBIENT_GANG_MARABUNTE`, `AMBIENT_GANG_CULT`, `AMBIENT_GANG_SALVA`, `AMBIENT_GANG_WEICHENG`, `AMBIENT_GANG_HILLBILLY`, `DEALER`,`COP`, `PRIVATE_SECURITY`, `SECURITY_GUARD`, `ARMY`, `MEDIC`, `FIREMAN`, `HATES_PLAYER`, `NO_RELATIONSHIP`, `SPECIAL`, `MISSION2`, `MISSION3`, `MISSION4`, `DOMESTIC_ANIMAL`, `GUARD_DOG`,`MISSION5`, `MISSION6`, `MISSION7`, `MISSION8`}, group2 = {`PLAYER`}} -- in this example all ped are neutral with player you can make table in group1 and group2 if you want set a lot type of relationship between ped and player or ped and ped
+        {relation = 0, group1 = {`CIVMALE`, `CIVFEMALE`, `GANG_1`, `GANG_2`, `GANG_9`, `GANG_10`, `AMBIENT_GANG_LOST`, `AMBIENT_GANG_MEXICAN`, `AMBIENT_GANG_FAMILY`, `AMBIENT_GANG_BALLAS`, `AMBIENT_GANG_MARABUNTE`, `AMBIENT_GANG_CULT`, `AMBIENT_GANG_SALVA`, `AMBIENT_GANG_WEICHENG`, `AMBIENT_GANG_HILLBILLY`, `DEALER`,`COP`, `PRIVATE_SECURITY`, `SECURITY_GUARD`, `ARMY`, `MEDIC`, `FIREMAN`, `HATES_PLAYER`, `NO_RELATIONSHIP`, `SPECIAL`, `MISSION2`, `MISSION3`, `MISSION4`, `DOMESTIC_ANIMAL`, `GUARD_DOG`,`MISSION5`, `MISSION6`, `MISSION7`, `MISSION8`}, group2 = {`PLAYER`}} -- in this example all ped are neutral with player you can make table in group1 and group2 if you want set a lot type of relationship between ped and player or ped and ped
     }
 }
 --[[__Manage a lot of options for any player are loaded__]]--
@@ -65,16 +65,16 @@ Config.AudioRadio = {
 Config.PauseMenu = {
     enable = true,
     title = '~o~New Dawn RP',
-    map = 'Carte',
-    game = 'Jeu',
-    disconnect = "Au revoir :'(",
-    quit = 'Quitter',
-    information = 'Briefing',
-    stats = 'Statistiques',
-    setting = 'Paramètres',
+    map = 'CARTE',
+    game = 'JEU',
+    disconnect = "Se deconnecter ? Ah bon 😔",
+    quit = "Vous vous nous quitter ? 😔",
+    information = 'BRIEFING',
+    stats = 'STATS',
+    setting = 'PARAMETRES',
     fivemKey = 'Touches FiveM' ,
-    gallery = 'Galerie',
-    editor = 'Editeur',
+    gallery = 'GALERIE',
+    editor = 'EDITEUR',
 }
 --[[__Config module default value__]]--
 Config.import = { -- Touch it only if you use module (import) and you want other value per default
