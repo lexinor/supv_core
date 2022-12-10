@@ -84,7 +84,7 @@ local function GetContent(self)
     if result ~= nil then
         return json.decode(result)
     end
-    error(("[ERROR] de la récupération du fichier %s"):format(filePath), 2)
+    error(("[ERROR] de la récupération du fichier %s"):format(self.filePath), 2)
     return nil
 end
 

@@ -1,3 +1,17 @@
+local SetNotificationTextEntry <const> = SetNotificationTextEntry
+local AddTextComponentString <const> = AddTextComponentString
+local ThefeedNextPostBackgroundColor <const> = ThefeedNextPostBackgroundColor
+local EndTextCommandThefeedPostTicker <const> = EndTextCommandThefeedPostTicker
+local BeginTextCommandThefeedPost <const> = BeginTextCommandThefeedPost
+local AddTextEntry <const> = AddTextEntry
+local AddTextComponentSubstringPlayerName <const> = AddTextComponentSubstringPlayerName
+local EndTextCommandThefeedPostMessagetext <const> = EndTextCommandThefeedPostMessagetext
+local DisplayHelpTextThisFrame <const> = DisplayHelpTextThisFrame
+local BeginTextCommandDisplayHelp <const> = BeginTextCommandDisplayHelp
+local EndTextCommandDisplayHelp <const> = EndTextCommandDisplayHelp
+local SetFloatingHelpTextWorldPosition <const> = SetFloatingHelpTextWorldPosition
+local SetFloatingHelpTextStyle <const> = SetFloatingHelpTextStyle
+
 --- SimpleNotification
 ---
 ---@param txt string
@@ -54,10 +68,10 @@ end
 ---@param txt string
 ---@param coords vector3
 local function FloatNotification(txt, coords) --> [Client]
-	AddTextEntry('supv_core:FloatingHelpNotification', txt)
+	AddTextEntry('supv_coreFloatingHelpNotification', txt)
 	SetFloatingHelpTextWorldPosition(1, coords)
 	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
-	BeginTextCommandDisplayHelp('supv_core:FloatingHelpNotification')
+	BeginTextCommandDisplayHelp('supv_coreFloatingHelpNotification')
 	EndTextCommandDisplayHelp(2, false, false, -1)
 end
 

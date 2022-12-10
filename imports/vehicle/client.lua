@@ -63,13 +63,9 @@ local function GetVehicleProperties(vehicle)
 	end
 
 	local neons = {}
-	local neonCount = 0
 
 	for i = 0, 3 do
-		if IsVehicleNeonLightEnabled(vehicle, i) then
-			neonCount += 1
-			neons[neonCount] = i
-		end
+        neons[i + 1] = IsVehicleNeonLightEnabled(vehicle, i)
 	end
 
 	return {
@@ -249,7 +245,7 @@ function SetVehicleProperties(vehicle, props, restricted)
 
     if props.neonEnabled then
         for i = 1, #props.neonEnabled do
-            SetVehicleNeonLightEnabled(vehicle, props.neonEnabled[i], true)
+            SetVehicleNeonLightEnabled(vehicle, i - 1, props.neonEnabled[i])
         end
     end
 

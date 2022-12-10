@@ -1,3 +1,5 @@
+if not Config.Resource then return end
+
 local Traffic <const>, Npc <const>, VehicleParked <const> = Config.Traffic.amount.traffic, Config.Traffic.amount.npc, Config.Traffic.amount.parked
 local EnableBoats <const>, EnableTrain <const>, EnableGarbageTruck <const>, EnablePolice <const> = Config.Traffic.enable.boats, Config.Traffic.enable.trains, Config.Traffic.enable.garbageTruck, Config.Traffic.enable.polices
 
@@ -355,7 +357,7 @@ if Config.PlayerOptions.noRollingGunFight then
 end
 
 if Config.PlayerOptions.noPunchRunning then
-    local IsPedRunningMeleeTask <const>, ClearPedTasksImmediately <const>, GetPlayerStamina <const>, sleep = IsPedRunningMeleeTask, ClearPedTasksImmediately, GetPlayerStamina, 0
+    local IsPedRunningMeleeTask <const>, ClearPedTasksImmediately <const>, GetPlayerStamina <const>, ResetPlayerStamina <const>, sleep = IsPedRunningMeleeTask, ClearPedTasksImmediately, GetPlayerStamina, ResetPlayerStamina, 0
     CreateThread(function()
         while true do
             Wait(0)

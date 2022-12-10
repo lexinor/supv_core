@@ -1,18 +1,17 @@
 fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
-use_experimental_fxv2_oal 'yes'
 
 author 'SUP2Ak'
-
-
-version '0.5b' -- b for beta
+version '0.7.1'
+link 'https://github.com/SUP2Ak/supv_core'
 
 description 'a core standalone to manage your server and got useful function to develop it too'
 
 shared_script '_g.lua'
 
 shared_scripts {
+    'import.lua',
     'resources/config/shared/*.lua',
     'resources/shared/*.lua',
 }

@@ -7,6 +7,42 @@ local default <const> = {
 
 local DrawMarker <const> = DrawMarker
 
+local function Show(coords, params)
+
+    local args = {}
+
+    --print(json.encode(params, {indent=true}), 'show')
+
+    args.visible = params?.visible or nil
+    args.id = params?.id or default.m1.id
+    args.color =  params?.color or default.m1.color
+    args.dir =  params?.dir or default.m1.dir
+    args.rot =  params?.rot or default.m1.rot
+    args.scale =  params?.scale or default.m1.scale
+    args.updown =  params?.updown or default.m1.updown
+    args.faceToCam =  params?.faceToCam or default.m1.faceToCam
+    args.p19 =  params?.p19 or default.m1.p19
+    args.textureDict =  params?.textureDict or default.m1.textureDict
+    args.textureName =  params?.textureName or default.m1.textureName
+    args.drawOnEnts =  params?.drawOnEnts or default.m1.drawOnEnts
+    args.z =  params?.z or default.m1.z
+    args.op =  params?.op or default.m1.op
+    args.color =  params?.color or default.m1.color1
+
+    local z = (coords.z + args.z)
+
+    if args.textureDict and args.textureName and not HasStreamedTextureDictLoaded(args.textureDict) then
+        RequestStreamedTextureDict(args.textureDict, true)
+        while not HasStreamedTextureDictLoaded(args.textureDict) do
+            Wait(1)
+        end
+    end
+
+    if args.visible then
+        DrawMarker(args.id, coords.x, coords.y, z, args.dir[1], args.dir[2], args.dir[3], args.rot[1], args.rot[2], args.rot[3], args.scale[1], args.scale[2], args.scale[3], args.color[1], args.color[2], args.color[3], args.color[4], args.updown, args.faceToCam, args.p19, args.rotate, args.textureDict, args.textureName, args.drawOnEnts)
+    end
+end
+
 local function Marker(double, inside, coords, params, params2)
 
     if double then
@@ -125,5 +161,6 @@ end
 
 
 return {
-    simple = Marker
+    simple = Marker,
+    show = Show
 }

@@ -109,6 +109,11 @@ end
 ---@param text string string
 ---@param data table {color_rect1 = {0,0,0,150}, color_rect2 = {255,0,0,100}, scale = {0.35,0.35}, police = 1}
 local function Text3D(coords, text, data)
+
+    if data.z then 
+        coords = vec3(coords.x, coords.y, coords.z + data.z) 
+    end
+
     local onScreen, _x, _y = World3dToScreen2d(coords.x, coords.y, coords.z)
     local color, scale, police = {}, data.scale or {0.25,0.25}, data.police or 0
     color.text = data.color_text or {255,255,255,255}
@@ -472,20 +477,14 @@ local function ProgressBar(text, time, setting, data, action)
                         end
                     end
                     if progressbar.setting.animation then
-                        if anim == nil then
-                            anim = supv.animation.strict(progressbar.setting.animation, progressbar.setting.prop)
-                        end
+                        if anim == nil then anim = supv.animation.strict(progressbar.setting.animation, progressbar.setting.prop ~= nil and progressbar.setting.prop) end
                         anim:play()
                     end
                     
                     if (GetGameTimer() - ProgressInitTimer > time) then
                         Finished(false)
-                        if anim then
-                            anim = anim:stop()
-                        end
-                        if action.success then
-                            action.success()
-                        end
+                        if anim then anim = anim:stop() end
+                        if action.success then action.success() end
                         ProgressBarActive = false
                         return false
                     end

@@ -167,7 +167,7 @@ local function Show(cb)
         local entityCoord = GetEntityCoords(entity)
         DrawEntityBoundingBox(entity, color)
         DrawLine(position.x, position.y, position.z, coords.x, coords.y, coords.z, color.r, color.g, color.b, color.a)
-        Draw3dText(vec3(entityCoord.x, entityCoord.y, entityCoord.z), ("model : %s | name : %s\nPress [~c~E~s~] to ~g~validate~s~ ~p~entity~s~"):format(GetEntityModel(entity), GetEntityArchetypeName(entity)), 2)
+        Draw3dText(vec3(entityCoord.x, entityCoord.y, entityCoord.z), ("model : %s | name : %s\nPress [~c~E~s~] to ~g~validate~s~ ~p~entity~s~"):format(GetEntityModel(entity),GetEntityArchetypeName(entity)), 2)
         if IsControlJustReleased(0, 38) then
             cb(entity, GetEntityModel(entity), GetEntityArchetypeName(entity))
         end
@@ -176,7 +176,6 @@ local function Show(cb)
         DrawMarker(28, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 0.1, 0.1, 0.1, color.r, color.g, color.b, color.a, false, true, 2, nil, nil, false)
     end
 end
-
 
 -- Mehtode Object Tool
 
@@ -336,30 +335,43 @@ local GetOffsetFromEntityInWorldCoords <const> = GetOffsetFromEntityInWorldCoord
 local CreateObject <const> = CreateObject
 local GetEntityType <const> = GetEntityType
 local GetEntityBoneIndexByName <const> = GetEntityBoneIndexByName
+local PlaceObjectOnGroundProperly <const> = PlaceObjectOnGroundProperly
+local SetEntityVisible <const> = SetEntityAlpha
+local SetEntityAlpha <const> = SetEntityAlpha
+local SetEntityCollision <const> = SetEntityCollision
 
 local function editTools(self, data)
     if not self.object then return end
-    DetachEntity(self.object, 1, 1)
     if data.coords then self.coords = data.coords end
     if data.rot then self.rot = data.rot end
-    if data.bone then self.bone = data.bone end
-    if self.entity_type == 1 then
-        AttachEntityToEntity(self.object, self.entity, GetPedBoneIndex(self.entity, self.bone), self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
-        return
-    elseif self.entity_type == 2 then -- vehicle
-        AttachEntityToEntity(self.object, self.entity, GetEntityBoneIndexByName(self.entity, self.bone), self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
+    if data.heading then self.heading = data.heading end
+    if data.zground then 
+        self.zground = true
+        PlaceObjectOnGroundProperly(self.object)
     else
-        AttachEntityToEntity(self.object, self.entity, 0, self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
+        self.zground = false
+    end
+    if self.entity then
+        DetachEntity(self.object, 1, 1)
+        if data.bone then self.bone = data.bone end
+        if self.entity_type == 1 then
+            AttachEntityToEntity(self.object, self.entity, GetPedBoneIndex(self.entity, self.bone), self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
+            return
+        elseif self.entity_type == 2 then -- vehicle
+            AttachEntityToEntity(self.object, self.entity, GetEntityBoneIndexByName(self.entity, self.bone), self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
+        else
+            AttachEntityToEntity(self.object, self.entity, 0, self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
+        end
     end
     return
 end
 
 local function removeTools(self)
-    if not self.object then return end
+    if not self.object then return print('error') end
+    DeleteEntity(self.object)
     if self.entity then
         DetachEntity(self.object, 1, 1)
     end
-    DeleteEntity(self.object)
     return nil, collectgarbage()
 end
 
@@ -371,6 +383,7 @@ local function CreateProps(model, setting)
         self.model = model
         self.coords = setting.coords or {0.0, 0.0, 0.0}
         self.rot = setting.rot or {0.0, 0.0, 0.0}
+        self.heading = setting.heading or 0.0
 
         if setting then
             if setting.entity then
@@ -379,27 +392,166 @@ local function CreateProps(model, setting)
                 self.bone = setting.bone or nil
                 self.entity_coords = GetOffsetFromEntityInWorldCoords(self.entity, 0.0, 0.0, 0.0)
                 self.object = CreateObject(self.model, self.entity_coords[1], self.entity_coords[2], self.entity_coords[3], false, false, true)
+            else
+                self.object = CreateObject(self.model, self.coords.xyz, false, false, true)
+                if self.heading ~= 0.0 then
+                    SetEntityHeading(self.object, self.heading)
+                end
             end
         end
 
-        if self.entity_type == 1 then -- ped
-            AttachEntityToEntity(self.object, self.entity, GetPedBoneIndex(self.entity, self.bone), self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
-        elseif self.entity_type == 2 then -- vehicle
-            AttachEntityToEntity(self.object, self.entity, GetEntityBoneIndexByName(self.entity, self.bone), self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
-        elseif self.entity_type == 3 then -- object (3)
-            AttachEntityToEntity(self.object, self.entity, 0, self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
-        else -- == 0
-            return print("error entity type = 0")
-        end        
+        if self.entity_coords then
+            if self.entity_type == 1 then -- ped
+                AttachEntityToEntity(self.object, self.entity, GetPedBoneIndex(self.entity, self.bone), self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
+            elseif self.entity_type == 2 then -- vehicle
+                AttachEntityToEntity(self.object, self.entity, GetEntityBoneIndexByName(self.entity, self.bone), self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
+            elseif self.entity_type == 3 then -- object (3)
+                AttachEntityToEntity(self.object, self.entity, 0, self.coords[1], self.coords[2], self.coords[3], self.rot[1], self.rot[2], self.rot[3], true, true, false, true, 1, true)
+            else -- == 0
+                return print("error entity type = 0")
+            end
+        end
+        
+        self.visible = setting.visible == false and SetEntityVisible(self.object, false, 0) or nil
+        self.alpha = type(setting.alpha) == 'number' and SetEntityAlpha(self.object, setting.alpha, 0) or nil
+        self.zground = setting.zground == true and PlaceObjectOnGroundProperly(self.object) or nil
+        self.collision = setting.collision == false and SetEntityCollision(self.object, false, false) or nil
     end)
+
     self.edit = editTools
     self.remove = removeTools
+    return self
+end
+
+-- Get Entity Obj
+
+local function SelectedRemove(self)
+    if self.entity and DoesEntityExist(self.entity) then
+        DeleteEntity(self.entity)
+    end
+    return nil, collectgarbage()
+end
+
+local function SelectedSetter(self, key, value, value2, value3)
+    if key == 'freeze' then
+        FreezeEntityPosition(self.entity, value)
+    elseif key == 'collision' then
+        SetEntityCollision(self.entity, value, value2 or true)
+    elseif key == 'alpha' then
+        SetEntityAlpha(self.entity, value, value2 or 0)
+    elseif key == 'visible' then
+        SetEntityVisible(self.entity, value, value2 or 0)
+    elseif key == 'coords' then
+        SetEntityCoords(self.entity, value, value2, value3)
+    elseif key == 'heading' then
+        SetEntityHeading(self.entity, value)
+    end
+end
+
+local function SelectedGetter(self, key)
+    if key == 'freeze' then
+        self.entity_isFrozen = IsEntityPositionFrozen(self.entity)
+        return self.entity_isFrozen
+    elseif key == 'collision' then
+        self.entity_collision = GetEntityCollisionDisabled(self.entity)
+        return self.entity_collision
+    elseif key == 'vec3' then
+        self.coords = GetEntityCoords(self.entity)
+        return self.coords
+    elseif key == 'heading' then
+        self.heading = GetEntityHeading(self.entity)
+        return self.heading
+    elseif key == 'vec4' then
+        local coords, heading = GetEntityCoords(self.entity), GetEntityHeading(self.entity)
+        self.vec4 = vec4(coords.x, coords.y, coords.z, heading)
+        return self.vec4
+    elseif key == 'alpha' then
+        self.entity_alpha = GetEntityAlpha(self.entity)
+        return self.entity_alpha
+    end
+    self.entity_isFrozen, self.entity_collision, self.coords, self.heading, self.entity_alpha = IsEntityPositionFrozen(self.entity), GetEntityCollisionDisabled(self.entity), GetEntityCoords(self.entity), GetEntityHeading(self.entity), GetEntityAlpha(self.entity)
+    local coords, heading = GetEntityCoords(self.entity), GetEntityHeading(self.entity)
+    self.vec4 = vec4(coords.x, coords.y, coords.z, heading)
+    return {isFrozen = self.entity_isFrozen, collisionDisable = self.entity_collision, coords = self.coords, heading = self.heading, vec4 = self.vec4, alpha = self.entity_alpha}
+end
+
+local function SelectedAttach(self, target, data)
+    if not DoesEntityExist(target) and not DoesEntityExist(self.entity) then return end
+    if data.coords then self._coords = data.coords end
+    if data.rot then self._rot = data.rot end
+    if data.bone then self._bone = data.bone end
+    if IsEntityAttached(self.entity) then DetachEntity(self.entity, 1, 1) end
+    if IsEntityAttached(target) then DetachEntity(target, 1, 1) end
+    if self.entity_type == 1 then
+        if not self._bone then self._bone = BoneList[1][1].index end
+        AttachEntityToEntity(target, self.entity, GetPedBoneIndex(self.entity, self._bone), self._coords[1], self._coords[2], self._coords[3], self._rot[1], self._rot[2], self._rot[3], true, true, false, true, 1, true)
+        self.native = ("AttachEntityToEntity(%s:entity, %s:entity, GetPedBoneIndex(%s:entity, %s), %s, %s, %s, %s, %s, %s, true, true, false, true, 1, true)"):format(GetEntityArchetypeName(target), GetEntityArchetypeName(self.entity), GetEntityArchetypeName(self.entity), self._bone, self._coords[1], self._coords[2], self._coords[3], self._rot[1], self._rot[2], self._rot[3])
+        return
+    elseif self.entity_type == 2 then -- vehicle
+        if not self._bone then self._bone = BoneList[2][1].index end
+        AttachEntityToEntity(target, self.entity, GetEntityBoneIndexByName(self.entity, self._bone), self._coords[1], self._coords[2], self._coords[3], self._rot[1], self._rot[2], self._rot[3], true, true, false, true, 1, true)
+        self.native = ("AttachEntityToEntity(%s:entity, %s:entity, GetEntityBoneIndexByName(%s:entity, %s), %s, %s, %s, %s, %s, %s, true, true, false, true, 1, true)"):format(GetEntityArchetypeName(target), GetEntityArchetypeName(self.entity), GetEntityArchetypeName(self.entity), self._bone, self._coords[1], self._coords[2], self._coords[3], self._rot[1], self._rot[2], self._rot[3])
+    else
+        AttachEntityToEntity(target, self.entity, 0, self._coords[1], self._coords[2], self._coords[3], self._rot[1], self._rot[2], self._rot[3], true, true, false, true, 1, true)
+        self.native = ("AttachEntityToEntity(%s:entity, %s:entity, 0, %s, %s, %s, %s, %s, %s, true, true, false, true, 1, true)"):format(GetEntityArchetypeName(target), GetEntityArchetypeName(self.entity), self._coords[1], self._coords[2], self._coords[3], self._rot[1], self._rot[2], self._rot[3])
+    end
+    return 
+end
+
+local function SelectedDetach(self)
+    if not DoesEntityExist(self.entity) then return end
+    if IsEntityAttached(self.entity) or IsEntityAttachedToAnyObject(self.entity) then
+        DetachEntity(self.entity,1,1)
+    end
+end
+
+local function UnSelected(self)
+    return nil, collectgarbage()
+end
+
+local function SelectedReset(self)
+    ResetEntityAlpha(self.entity)
+    SetEntityCollision(self.entity, true, true)
+    --SetEntityVisible(self.entity, false, 0)
+    SetEntityCoords(self.entity, self.firstCoord.x, self.firstCoord.y, self.firstCoord.z)
+    SetEntityHeading(self.entity, self.firstHeading)
+    --SetEntityVisible(self.entity, true, 0)
+end
+
+local function SelectEntity(entity)
+    local self = {}
+    
+    self.entity = entity
+    self.model = GetEntityModel(self.entity) ---@return hash
+    self.coords = GetEntityCoords(self.entity) ---@return vector3
+    self.heading = GetEntityHeading(self.entity) ---@return float
+    self.entity_type = GetEntityType(self.entity) ---@return int
+    self.entity_alpha = GetEntityAlpha(self.entity) ---@return int
+    self.entity_isFrozen = IsEntityPositionFrozen(self.entity) ---@return boolean
+    self.entity_collision = GetEntityCollisionDisabled(self.entity) ---@return boolean
+    self.vec4 = vec4(self.coords.x, self.coords.y, self.coords.z, self.heading) ---@return vector4
+    self.firstCoord = self.coords
+    self.firstHeading = self.heading
+
+    self.boneList = BoneList[self.entity_type] ---@return table
+    
+    self.set = SelectedSetter
+    self.get = SelectedGetter
+    self.remove = SelectedRemove
+    self.attach = SelectedAttach
+    self.detach = SelectedDetach
+    self.unSelect = UnSelected
+    self.reset = SelectedReset
+    --self.edit = SelectedEdit
+
     return self
 end
 
 
 return {
     laser = Show,
+    draw3d = Draw3dText,
     boneList = BoneList,
-    createProps = CreateProps
+    createProps = CreateProps,
+    selectEntity = SelectEntity
 }

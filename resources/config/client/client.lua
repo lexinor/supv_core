@@ -1,4 +1,8 @@
 -- ALL PARAMETER ARE DESACTIVATE PER DEFAULT YOU CAN ACTIVATE AND USE WHAT YOU WANT!!!!!!!!
+
+-- Enable ressource file Config
+Config.Resource = false -- turn on true if you want setting all config in this file / Mettre true pour pouvoir config et activé les scripts ci-dessous 
+
 --[[__Manage rewards of your server__]]--
 Config.Rewards = {vehicle = false, npc = false, clearPickUpsRewards = true, listVehicle = {}} -- false to desactivate rewards & true to active them / clearPickUpsRewards set true if npc = false [`polmav`] = true, [`fbi`] = true, [`fib2`] = true, [`police`] = true, [`police2`] = true, [`police3`] = true, [`police4`] = true, [`policeb`] = true, [`policet`] = true, [`policeold1`] = true, [`policeold2`] = true, [`pranger`] = true, [`riot`] = true, [`sheriff`] = true, [`sheriff2`] = true}
 --[[__Manage traffic of your server & dispatch__]]--
@@ -30,10 +34,10 @@ Config.Relationship = { -- https://docs.fivem.net/natives/?_0xBF25EB89375A37AD
 --[[__Manage a lot of options for any player are loaded__]]--
 Config.PlayerOptions = { 
     flag = { -- https://docs.fivem.net/natives/?_0x9CFBE10D
-        enable = true, -- true active script
+        enable = false, -- true active script
         list = {
             {value = false, flagId = 35}, -- for player don't auto put helmet when he is on bike
-            {value = false, flagId = 429}, -- disable auto start engin when player entered in vehicle (great if you got supv_carkey)
+            {value = true, flagId = 429}, -- disable auto start engin when player entered in vehicle (great if you got supv_carkey)
         }
     },
     hideHudComponent = { -- https://docs.fivem.net/natives/?_0x6806C51AD12B83B8

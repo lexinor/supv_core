@@ -1,5 +1,21 @@
 local object, call = {}, false
 local timer, time = 501, 500
+
+local DetachEntity <const> = DetachEntity
+local DeleteEntity <const> = DeleteEntity
+local GetGameTimer <const> = GetGameTimer
+local RequestModel <const> = RequestModel
+local HasModelLoaded <const> = HasModelLoaded
+local GetOffsetFromEntityInWorldCoords <const> = GetOffsetFromEntityInWorldCoords
+local CreateObject <const> = CreateObject
+local ObjToNet <const> = ObjToNet
+local SetNetworkIdExistsOnAllMachines <const> = SetNetworkIdExistsOnAllMachines
+local NetworkSetNetworkIdDynamic <const> = NetworkSetNetworkIdDynamic
+local SetNetworkIdCanMigrate <const> = SetNetworkIdCanMigrate
+local NetToObj <const> = NetToObj
+local GetPedBoneIndex <const> = GetPedBoneIndex
+local AttachEntityToEntity <const> = AttachEntityToEntity
+
 ---self:edit
 --- WORK IN PROGRESS
 ---@param
@@ -12,10 +28,10 @@ end
 ---@return nil
 ---@return collectgarbarge
 local function Destroy(self)
+    DeleteEntity(self.toObj)
     if self.entity then
         DetachEntity(self.toObj, 1, 1)
     end
-    DeleteEntity(self.toObj)
     object[self.id] = nil
     return nil, collectgarbage()
 end
@@ -36,7 +52,6 @@ local function New(modelHash, setting)
     time = GetGameTimer()
 
     local self = {}
-    
 
     self.id = id
     self.model = modelHash
@@ -86,11 +101,22 @@ local function New(modelHash, setting)
     return self
 end
 
-local function Created(model, coords, cb)
+local function Created(model, coords, cb, mission) -- networked
     CreateThread(function()
         supv.stream.request(model)
 
-        local obj = CreateObject(model, coords.xyz, true, false, true)
+        local obj = CreateObject(model, coords.xyz, true, mission or false, true)
+        if cb then
+            cb(obj)
+        end
+    end)
+end
+
+local function CreatedLocal(model, coords, cb, mission) -- not networked
+    CreateThread(function()
+        supv.stream.request(model)
+
+        local obj = CreateObject(model, coords.xyz, false, mission or false, true)
         if cb then
             cb(obj)
         end
@@ -100,4 +126,5 @@ end
 return {
     new = New,
     create = Created,
+    createLocal = CreatedLocal
 }
