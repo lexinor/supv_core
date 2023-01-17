@@ -18,11 +18,11 @@ Config.Webhook = {
     },
     
     default = {
-        bot_name = 'NewDawn',
-        color = 7055103,
+        bot_name = 'NewDawnRP Logs',
+        color = 65280,
         localisation = 'fr_FR',
         dof = 'letter', -- 'letter' or 'numeric'
-        foot_icon = 'https://avatars.githubusercontent.com/u/95303960?s=280&v=4',
-        avatar = "https://avatars.githubusercontent.com/u/95303960?s=280&v=4"
+        foot_icon = 'https://avatars.githubusercontent.com/u/28725795',
+        avatar = "https://avatars.githubusercontent.com/u/28725795"
     }
 }
