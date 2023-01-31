@@ -1,7 +1,7 @@
 -- ALL PARAMETER ARE DESACTIVATE PER DEFAULT YOU CAN ACTIVATE AND USE WHAT YOU WANT!!!!!!!!
 
 -- Enable ressource file Config
-Config.Resource = false -- turn on true if you want setting all config in this file / Mettre true pour pouvoir config et activé les scripts ci-dessous 
+Config.Resource = true -- turn on true if you want setting all config in this file / Mettre true pour pouvoir config et activé les scripts ci-dessous 
 
 --[[__Manage rewards of your server__]]--
 Config.Rewards = {vehicle = false, npc = false, clearPickUpsRewards = true, listVehicle = {}} -- false to desactivate rewards & true to active them / clearPickUpsRewards set true if npc = false [`polmav`] = true, [`fbi`] = true, [`fib2`] = true, [`police`] = true, [`police2`] = true, [`police3`] = true, [`police4`] = true, [`policeb`] = true, [`policet`] = true, [`policeold1`] = true, [`policeold2`] = true, [`pranger`] = true, [`riot`] = true, [`sheriff`] = true, [`sheriff2`] = true}
@@ -53,7 +53,7 @@ Config.PlayerOptions = {
     afkCam = false, -- true per default, false desactivate afkCam
     canRagdoll = true, -- true per default, false desactivate ragdoll
     gotDamagedOnlyByPlayers = false, -- false per default, true active script
-    showRadar = {visible = 'vehicle', blacklist = {[`sanchez`] = true, [`bmx`] = true}}, -- visible: true/false or 'vehicle', if visible = 'vehicle' then you can blacklist some vehicle
+    showRadar = {visible = 'vehicle', blacklist = {[`bmx`] = true}}, -- visible: true/false or 'vehicle', if visible = 'vehicle' then you can blacklist some vehicle
     showRadarArmourHealth = true -- true per default
 }
 --[[__Manage Radio Control in vehicle__]]--
